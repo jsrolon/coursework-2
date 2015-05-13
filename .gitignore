@@ -1,0 +1,38 @@
+lab
+modelSolutions/lab_model
+.DS_Store
+*.swp
+OpenGLFramework/external/glew-1.12.0/bin/
+OpenGLFramework/external/glew-1.12.0/glew.pc
+OpenGLFramework/external/glew-1.12.0/glewmx.pc
+OpenGLFramework/external/glfw-3.1/build/
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
