@@ -2,13 +2,13 @@
 
 // Input vertex data, different for all executions of this shader.
 attribute vec3 vertexPosition_modelspace;
-in vec2 vertexUV;
-in vec3 vertexNormal_modelspace;
+attribute vec2 vertexUV;
+attribute vec3 vertexNormal_modelspace;
 
 // Output data ; will be interpolated for each fragment.
-in vec2 UV;
-in vec3 Normal_worldspace;
-in vec3 Light_worldspace;
+varying vec2 UV;
+varying vec3 Normal_worldspace;
+varying vec3 Light_worldspace;
 
 
 // Values that stay constant for the whole mesh.

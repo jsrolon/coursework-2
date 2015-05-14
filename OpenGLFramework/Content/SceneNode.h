@@ -1,6 +1,6 @@
 #ifndef _SCENE_NODE
 #define _SCENE_NODE
-#include <OpenGLFramework\Content\OpenGLContent.h>
+#include "OpenGLContent.h"
 #include <map>
 
 class SceneNode:public OpenGLContent{

@@ -14,8 +14,9 @@ GLFW_STATIC=$(GLFW_BUILD_DIR)/src/libglfw3.a
 INCLUDE=-I. -I$(GLEW_DIR)/include -I$(GLFW_DIR)/include -I$(GLFW_DIR)/include/GLFW -I$(EXTERNAL_DIR)/include
 
 CXX=g++
-CPPFLAGS=-Wall -Wextra $(INCLUDE)
-LDLIBS=$(GLEW_STATIC) $(GLFW_STATIC) -framework Cocoa -framework IOKit -framework CoreVideo -framework OpenGL
+CPPFLAGS=-Wall -Wextra -g $(INCLUDE)
+# do not forget to include assimp!
+LDLIBS=$(GLEW_STATIC) $(GLFW_STATIC) -lassimp -framework Cocoa -framework IOKit -framework CoreVideo -framework OpenGL
 # Switch the two versions of LDLIBs if you are using Linux, these *should* work
 #LDLIBS=$(GLEW_STATIC) $(GLFW_STATIC) -lGL -lX11 -lXrandr -lXi -lXxf86vm -lXinerama -lXcursor
 

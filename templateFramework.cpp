@@ -1,4 +1,6 @@
 #include <OpenGLFramework/OpenGLFramework.h>
+#include <OpenGLFramework/Content/SceneNode.h>
+#include <assimp/Importer.hpp>
 
 //0. Elements that we use for our OpenGL program
 //0.1. A FrameBuffer, to write our scene to (this can be the monitor or a render to texture buffer)
@@ -6,9 +8,14 @@ RenderBufferObject* def_fbo;
 //0.2. The Projection and view matrices that will control the location of our camera
 glm::mat4 P,V;
 //0.3. The OpenGL contents that we are going to display
-OpenGLContent *objectA;
-OpenGLContent *objectB;
-//OpenGLContent *objectC; //Object C is deactivated by default, uncomment all the lines to load and display it
+// OpenGLContent *objectA;
+// OpenGLContent *objectB;
+OpenGLContent *objectC;
+
+/*
+* Scene nodes
+*/
+SceneNode* sceneNode;
 
 //1. Methods required to build our program:
 //1.1. Create the contents and place them where appropriate
@@ -65,46 +72,51 @@ void createWorldScene(){
 	//1. Create the buffer where our stuff is going to be rendered.
 	def_fbo=RenderBufferObject::createDefaultRenderBufferObject();
 
+	// testing assimp
+	Assimp::Importer importer;
+
 	//2. Create our objects:
 	//2.1. Create our axis
-	objectA=createWorldAxis();
+	// objectA=createWorldAxis();
 	//2.2. Create a simple Triangle with an array of positions for its 3 vertices
-	GLfloat aSillyTriangle[]={ -0.5,0,-1,   0.5,0,-1,  0,0.5f,-1};
-	objectB=new ManualObject_SingleColour(3, aSillyTriangle);
+	// GLfloat aSillyTriangle[]={ -0.5,0,-1,   0.5,0,-1,  0,0.5f,-1};
+	// objectB=new ManualObject_SingleColour(3, aSillyTriangle);
 	//2.3. We can also load an obj file
-	//objectC=new ShadedOBJObjectDirectionalLight("suzanne.obj","suzanne.DDS");
+	objectC=new ShadedOBJObjectPointLight("media/mobile_turret1.obj","");
 
 	//2.2. load resources from disc into main memory
-	objectA->loadResourcesToMainMemory();
-	objectB->loadResourcesToMainMemory();
+	// objectA->loadResourcesToMainMemory();
+	// objectB->loadResourcesToMainMemory();
+	objectC->loadResourcesToMainMemory();
 
 	//2.3. Allocate resources in the graphics card: get handles to attributes, create buffers, copy data accross
-	objectA->allocateOpenGLResources();
-	objectB->allocateOpenGLResources();
+	// objectA->allocateOpenGLResources();
+	// objectB->allocateOpenGLResources();
+	objectC->allocateOpenGLResources();
 
 	//2.4. We can also adjust each object's position
 	//glm::mat4 Model;
 	//Model= glm::translate(Model, glm::vec3(4,0,0));
-	//objectC->setModelMatrix(Model);
+	// objectC->setModelMatrix(Model);
 }
 
 void renderWorldScene(RenderBufferObject* rtt_fbo, glm::mat4 P,glm::mat4 V){
 		//1. Prepare the buffer for rendering:
 		rtt_fbo->preRender();
 		//2. Render all our contents
-		objectA->render(P,V);
-		objectB->render(P,V);
-		//objectC->render(P,V);
+		// objectA->render(P,V);
+		// objectB->render(P,V);
+		objectC->render(P,V);
 		rtt_fbo->postRender();		
 }
 
 void destroyWorldScene(){
-	objectA->unallocateAllResources();
-	objectB->unallocateAllResources();
-	//objectC->unallocateAllResources();
-	delete objectA;
-	delete objectB;
-	//delete objectC;
+	// objectA->unallocateAllResources();
+	// objectB->unallocateAllResources();
+	objectC->unallocateAllResources();
+	// delete objectA;
+	// delete objectB;
+	delete objectC;
 }
 
 
