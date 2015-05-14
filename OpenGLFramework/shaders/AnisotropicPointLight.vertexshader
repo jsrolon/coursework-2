@@ -44,7 +44,7 @@ void main(){
 	
 	// Tangent of the the vertex, in camera space
 	Tangent_cameraspace = ( V * M * vec4(vertexTangent_modelspace,0)).xyz; // Only correct if ModelMatrix does not scale the model ! Use its inverse transpose if not.
-	
+
 	// Bitangent of the the vertex, in camera space
 	Bitangent_cameraspace = ( V * M * vec4(vertexBitangent_modelspace,0)).xyz; // Only correct if ModelMatrix does not scale the model ! Use its inverse transpose if not.
 	

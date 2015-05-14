@@ -20,16 +20,15 @@ void main(){
 	// You probably want to put them as uniforms
 	vec3 LightColor = vec3(1,1,1);
 	float LightPower = 50.0f;
+	float kSpecular = 10.0f;
 	
 	// Material properties
 	vec3 MaterialDiffuseColor = texture2D( myTextureSampler, UV ).rgb;
 	vec3 MaterialAmbientColor = vec3(0.1,0.1,0.1) * MaterialDiffuseColor;
-	vec3 MaterialSpecularColor = vec3(0.3,0.3,0.3);
+	vec3 MaterialSpecularColor = vec3(0.4,0.4,0.4);
 
 	// Distance to the light
 	float distance = length( LightPosition_worldspace - Position_worldspace );
-	vec3 T = normalize(Tangent_cameraspace);
-	vec3 B = normalize(Bitangent_cameraspace);
 	// Normal of the computed fragment, in camera space
 	vec3 n = normalize( Normal_cameraspace );
 	// Direction of the light (from the fragment to the light)
@@ -45,18 +44,31 @@ void main(){
 	vec3 E = normalize(EyeDirection_cameraspace);
 	// Direction in which the triangle reflects the light
 	vec3 R = reflect(-l,n);
-	// Cosine of the angle between the Eye vector and the Reflect vector,
+	// halfway vector (for anisotropic reflection)
+	vec3 H = normalize(E + l);
+	// Cosine of the angle between the Eye vector and the Reflected light direction,
 	// clamped to 0
 	//  - Looking into the reflection -> 1
 	//  - Looking elsewhere -> < 1
 	float cosAlpha = clamp( dot( E,R ), 0,1 );
+
+	/* Anisotropic calculations */
+	// T and B vectors
+	vec3 T = normalize(Tangent_cameraspace);
+	vec3 B = normalize(Bitangent_cameraspace);
+
+	float dotHTAlphaX = dot(H, T)/kSpecular;
+	float dotHBAlphaY = dot(H, B)/kSpecular;
+
+	// 0.5 models brightness along tangent being half of that along bitangent
+	float ward = exp(-2.0 * (dotHTAlphaX * dotHTAlphaX * 0.5 + dotHBAlphaY * dotHBAlphaY) / (1.0 + dot(H, n)));
 	
 	gl_FragColor.rgb = 
 		// Ambient : simulates indirect lighting
 		MaterialAmbientColor +
 		// Diffuse : "color" of the object
-		MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance*distance) +
-		// Specular : reflective highlight, like a mirror
-		MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,500) / (distance*distance);
+		MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance*distance) + 
+		// Specular: metallic shine
+		MaterialSpecularColor * LightColor * LightPower * cosAlpha * ward / (distance*distance);
 
 }

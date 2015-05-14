@@ -1,5 +1,6 @@
 #include <vector>
 #include <stdio.h>
+#include <iostream>
 #include <string>
 #include <cstring>
 
@@ -160,19 +161,18 @@ bool loadAssImp(
 	}
 
 	// Fill tangents
-	tangents.reserve(mesh->mTangents->Length());
-	for(unsigned int i=0; i<mesh->mTangents->Length(); i++){
+	tangents.reserve(mesh->mNumVertices);
+	for(unsigned int i=0; i<mesh->mNumVertices; i++){
 		aiVector3D n = mesh->mTangents[i];
 		tangents.push_back(glm::vec3(n.x, n.y, n.z));
 	}
 
 	// Fill bitangents
-	bitangents.reserve(mesh->mBitangents->Length());
-	for(unsigned int i=0; i<mesh->mBitangents->Length(); i++){
+	bitangents.reserve(mesh->mNumVertices);
+	for(unsigned int i=0; i<mesh->mNumVertices; i++){
 		aiVector3D n = mesh->mBitangents[i];
 		bitangents.push_back(glm::vec3(n.x, n.y, n.z));
 	}
-	printf("Tangents and bitangents loaded succesfully.\n");
 
 	// Fill face indices
 	indices.reserve(3*mesh->mNumFaces);
