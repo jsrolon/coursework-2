@@ -1,6 +1,5 @@
 #include <OpenGLFramework/OpenGLFramework.h>
 #include <OpenGLFramework/Content/SceneNode.h>
-#include <assimp/Importer.hpp>
 
 //0. Elements that we use for our OpenGL program
 //0.1. A FrameBuffer, to write our scene to (this can be the monitor or a render to texture buffer)
@@ -72,9 +71,6 @@ void createWorldScene(){
 	//1. Create the buffer where our stuff is going to be rendered.
 	def_fbo=RenderBufferObject::createDefaultRenderBufferObject();
 
-	// testing assimp
-	Assimp::Importer importer;
-
 	//2. Create our objects:
 	//2.1. Create our axis
 	// objectA=createWorldAxis();
@@ -82,7 +78,7 @@ void createWorldScene(){
 	// GLfloat aSillyTriangle[]={ -0.5,0,-1,   0.5,0,-1,  0,0.5f,-1};
 	// objectB=new ManualObject_SingleColour(3, aSillyTriangle);
 	//2.3. We can also load an obj file
-	objectC=new ShadedOBJObjectPointLight("media/mobile_turret1.obj","");
+	objectC=new AnisotropicObjectPointLight("media/Suzanne.obj","media/Suzanne.DDS");
 
 	//2.2. load resources from disc into main memory
 	// objectA->loadResourcesToMainMemory();

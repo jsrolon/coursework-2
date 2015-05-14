@@ -110,7 +110,7 @@ bool loadOBJ(
 }
 
 
-#ifdef USE_ASSIMP // don't use this #define, it's only for me (it AssImp fails to compile on your machine, at least all the other tutorials still work)
+// #ifdef USE_ASSIMP // don't use this #define, it's only for me (it AssImp fails to compile on your machine, at least all the other tutorials still work)
 
 // Include AssImp
 #include <assimp/Importer.hpp>      // C++ importer interface
@@ -122,12 +122,15 @@ bool loadAssImp(
 	std::vector<unsigned short> & indices,
 	std::vector<glm::vec3> & vertices,
 	std::vector<glm::vec2> & uvs,
-	std::vector<glm::vec3> & normals
+	std::vector<glm::vec3> & normals,
+	std::vector<glm::vec3> & tangents,
+	std::vector<glm::vec3> & bitangents
 ){
 
 	Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile(path, 0/*aiProcess_JoinIdenticalVertices | aiProcess_SortByPType*/);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace 
+		| aiProcess_GenNormals | aiProcess_GenUVCoords);
 	if( !scene) {
 		fprintf( stderr, importer.GetErrorString());
 		getchar();
@@ -156,6 +159,20 @@ bool loadAssImp(
 		normals.push_back(glm::vec3(n.x, n.y, n.z));
 	}
 
+	// Fill tangents
+	tangents.reserve(mesh->mTangents->Length());
+	for(unsigned int i=0; i<mesh->mTangents->Length(); i++){
+		aiVector3D n = mesh->mTangents[i];
+		normals.push_back(glm::vec3(n.x, n.y, n.z));
+	}
+
+	// Fill bitangents
+	bitangents.reserve(mesh->mBitangents->Length());
+	for(unsigned int i=0; i<mesh->mBitangents->Length(); i++){
+		aiVector3D n = mesh->mBitangents[i];
+		normals.push_back(glm::vec3(n.x, n.y, n.z));
+	}
+	printf("Tangents and bitangents loaded succesfully.\n");
 
 	// Fill face indices
 	indices.reserve(3*mesh->mNumFaces);
@@ -170,4 +187,4 @@ bool loadAssImp(
 
 }
 
-#endif
+// #endif

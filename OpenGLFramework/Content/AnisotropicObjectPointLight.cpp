@@ -1,14 +1,15 @@
-#include "OpenGLFramework/Content/ShadedOBJObjectPointLight.h"
+#include "OpenGLFramework/Content/AnisotropicObjectPointLight.h"
 #include <vector>
 #include <OpenGLFramework/common/objloader.hpp>
 
-bool ShadedOBJObjectPointLight::loadResourcesToMainMemory(){
+bool AnisotropicObjectPointLight::loadResourcesToMainMemory(){
 	//Read our .obj file into our raw data buffers
-	bool res = loadOBJ(model.c_str(), vertices, uvs, normals);
+	std::vector<unsigned short> indices;
+	bool res = loadAssImp(model.c_str(), indices, vertices, uvs, normals, tangents, bitangents);
 	return true;
 }
 
-bool ShadedOBJObjectPointLight::allocateOpenGLResources(){
+bool AnisotropicObjectPointLight::allocateOpenGLResources(){
 	/* Load the texture. These methods actually load into main memory, but they also allocate
 	   the texture in the graphics card already, returning a handler for the texture.
 	   We support two formats, one for BMP and ne for DDS.	*/
@@ -24,7 +25,7 @@ bool ShadedOBJObjectPointLight::allocateOpenGLResources(){
 		return false;
 
 	// Create and compile our GLSL program from the shaders
-	programID = LoadShaders( "OpenGLFramework/shaders/PointLightShading.vertexshader", "OpenGLFramework/shaders/PointLightShading.fragmentshader" );
+	programID = LoadShaders( "OpenGLFramework/shaders/AnisotropicPointLight.vertexshader", "OpenGLFramework/shaders/AnisotropicPointLight.fragmentshader" );
 	// Get a handle for our "MVP" uniform
 	MatrixID = glGetUniformLocation(programID, "MVP");			//MVP matrix (uniform)
 	ViewMatrixID = glGetUniformLocation(programID, "V");		//View matrix(uniform)
@@ -33,6 +34,8 @@ bool ShadedOBJObjectPointLight::allocateOpenGLResources(){
 	vertexPosition_modelspaceID = glGetAttribLocation(programID, "vertexPosition_modelspace");	//Array of vertices
 	vertexUVID = glGetAttribLocation(programID, "vertexUV");									//Array of UV coords
 	vertexNormal_modelspaceID = glGetAttribLocation(programID, "vertexNormal_modelspace");		//Array of normals
+	vertexTangent_modelspaceID = glGetAttribLocation(programID, "vertexTangent_modelspace");
+	vertexBitangent_modelspaceID = glGetAttribLocation(programID, "vertexBitangent_modelspace");
 	lightID = glGetUniformLocation(programID, "LightPosition_worldspace");						//Location of light (uniform) 
 	TextureID  = glGetUniformLocation(programID, "myTextureSampler");							//Texture to use (uniform)
 	// Load object data into OpenGL buffers (VBO)
@@ -45,11 +48,17 @@ bool ShadedOBJObjectPointLight::allocateOpenGLResources(){
 	glGenBuffers(1, &normalbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
 	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+	glGenBuffers(1, &tangentbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, tangentbuffer);
+	glBufferData(GL_ARRAY_BUFFER, tangents.size() * sizeof(glm::vec3), &tangents[0], GL_STATIC_DRAW);
+	glGenBuffers(1, &bitangentbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, bitangentbuffer);
+	glBufferData(GL_ARRAY_BUFFER, bitangents.size() * sizeof(glm::vec3), &bitangents[0], GL_STATIC_DRAW);
 
 	return true;
 }
 
-bool ShadedOBJObjectPointLight::render(glm::mat4 P, glm::mat4 V){
+bool AnisotropicObjectPointLight::render(glm::mat4 P, glm::mat4 V){
 	// Use our shader
 		glUseProgram(programID);
 
@@ -100,17 +109,43 @@ bool ShadedOBJObjectPointLight::render(glm::mat4 P, glm::mat4 V){
 			0,                            // stride
 			(void*)0                      // array buffer offset
 		);
-		
+
+		//tangents
+		glEnableVertexAttribArray(vertexTangent_modelspaceID);
+		glBindBuffer(GL_ARRAY_BUFFER, tangentbuffer);
+		glVertexAttribPointer(
+			vertexTangent_modelspaceID,    // The attribute we want to configure
+			3,                            // size
+			GL_FLOAT,                     // type
+			GL_FALSE,                     // normalized?
+			0,                            // stride
+			(void*)0                      // array buffer offset
+		);
+
+		//bitangents
+		glEnableVertexAttribArray(vertexBitangent_modelspaceID);
+		glBindBuffer(GL_ARRAY_BUFFER, bitangentbuffer);
+		glVertexAttribPointer(
+			vertexBitangent_modelspaceID,    // The attribute we want to configure
+			3,                            // size
+			GL_FLOAT,                     // type
+			GL_FALSE,                     // normalized?
+			0,                            // stride
+			(void*)0                      // array buffer offset
+		);
+
 		// Draw the triangles !
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size()); // 12*3 indices starting at 0 -> 12 triangles
+		glDrawArrays(GL_TRIANGLES, 0, tangents.size()); // 12*3 indices starting at 0 -> 12 triangles
 
 		glDisableVertexAttribArray(vertexPosition_modelspaceID);
 		glDisableVertexAttribArray(vertexUVID);	
 		glDisableVertexAttribArray(vertexNormal_modelspaceID);
+		glDisableVertexAttribArray(vertexTangent_modelspaceID);
+		glDisableVertexAttribArray(vertexBitangent_modelspaceID);
 	return true;
 }
 
-bool ShadedOBJObjectPointLight::unallocateAllResources(){
+bool AnisotropicObjectPointLight::unallocateAllResources(){
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer);
 	glDeleteBuffers(1, &uvbuffer);

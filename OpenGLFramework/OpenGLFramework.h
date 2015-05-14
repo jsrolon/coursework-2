@@ -11,9 +11,10 @@
 #include "OpenGLFramework/Content/ManualObject_SingleColour.h"
 #include "OpenGLFramework/Content/ManualObject_PerVertexColour.h"
 #include "OpenGLFramework/Content/OpenGLOBJObject.h"
+#include "OpenGLFramework/Content/AnisotropicObjectPointLight.h"
 #include "OpenGLFramework/Content/ShadedOBJObjectPointLight.h"
 #include "OpenGLFramework/Content/ShadedOBJObjectDirectionalLight.h"
-//#include "OpenGLFramework/Content/SceneNode.h"
+#include "OpenGLFramework/Content/SceneNode.h"
 
 //Base class for Frama Buffer Objects
 #include <OpenGLFramework/FBO/RenderBuffer.h>
