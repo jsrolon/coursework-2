@@ -163,14 +163,14 @@ bool loadAssImp(
 	tangents.reserve(mesh->mTangents->Length());
 	for(unsigned int i=0; i<mesh->mTangents->Length(); i++){
 		aiVector3D n = mesh->mTangents[i];
-		normals.push_back(glm::vec3(n.x, n.y, n.z));
+		tangents.push_back(glm::vec3(n.x, n.y, n.z));
 	}
 
 	// Fill bitangents
 	bitangents.reserve(mesh->mBitangents->Length());
 	for(unsigned int i=0; i<mesh->mBitangents->Length(); i++){
 		aiVector3D n = mesh->mBitangents[i];
-		normals.push_back(glm::vec3(n.x, n.y, n.z));
+		bitangents.push_back(glm::vec3(n.x, n.y, n.z));
 	}
 	printf("Tangents and bitangents loaded succesfully.\n");
 

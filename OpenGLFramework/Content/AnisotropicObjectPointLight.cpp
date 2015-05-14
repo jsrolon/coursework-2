@@ -135,7 +135,8 @@ bool AnisotropicObjectPointLight::render(glm::mat4 P, glm::mat4 V){
 		);
 
 		// Draw the triangles !
-		glDrawArrays(GL_TRIANGLES, 0, tangents.size()); // 12*3 indices starting at 0 -> 12 triangles
+		int vSize = vertices.size();
+		glDrawArrays(GL_TRIANGLES, 0, vSize); // 12*3 indices starting at 0 -> 12 triangles
 
 		glDisableVertexAttribArray(vertexPosition_modelspaceID);
 		glDisableVertexAttribArray(vertexUVID);	
