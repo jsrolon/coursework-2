@@ -1,0 +1,15 @@
+#version 120
+/*
+ * This one is for test purposes only
+*/
+attribute vec2 TexCoordOut;
+uniform sampler2D gShadowMap;
+
+varying vec4 FragColor;
+
+void main()
+{
+    float Depth = texture(gShadowMap, TexCoordOut).x;
+    Depth = 1.0 - (1.0 - Depth) * 25.0;
+    gl_FragColor = vec4(Depth);
+} 

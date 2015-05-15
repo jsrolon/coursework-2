@@ -4,6 +4,7 @@
 //0. Elements that we use for our OpenGL program
 //0.1. A FrameBuffer, to write our scene to (this can be the monitor or a render to texture buffer)
 RenderBufferObject* def_fbo;
+RenderBufferObject* shadowMap_fbo;
 //0.2. The Projection and view matrices that will control the location of our camera
 glm::mat4 P,V;
 //0.3. The OpenGL contents that we are going to display
@@ -70,6 +71,7 @@ OpenGLContent* createWorldAxis();
 void createWorldScene(){
 	//1. Create the buffer where our stuff is going to be rendered.
 	def_fbo=RenderBufferObject::createDefaultRenderBufferObject();
+	shadowMap_fbo=RenderBufferObject::createRTTBufferObject(800, 600);
 
 	//2. Create our objects:
 	//2.1. Create our axis
@@ -103,7 +105,7 @@ void renderWorldScene(RenderBufferObject* rtt_fbo, glm::mat4 P,glm::mat4 V){
 		// objectA->render(P,V);
 		// objectB->render(P,V);
 		objectC->render(P,V);
-		rtt_fbo->postRender();		
+		rtt_fbo->postRender();
 }
 
 void destroyWorldScene(){

@@ -5,6 +5,6 @@
 RenderBufferObject* RenderBufferObject::createDefaultRenderBufferObject(){
 	return	&DefaultRenderBufferObject::instance();
 }
-RenderBufferObject* RenderBufferObjectcreateRTTBufferObject(int width,int height){
+RenderBufferObject* RenderBufferObject::createRTTBufferObject(int width,int height){
 	return new RTTRenderBufferObject(width, height);
 }
