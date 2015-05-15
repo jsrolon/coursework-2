@@ -55,7 +55,8 @@ void ShadowMapBufferObject::preRender(){
 }
 
 void ShadowMapBufferObject::postRender(){
-
+	// sets current fb as the default one
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 // This function will be used before the second render pass to bind the shadow map for reading. 

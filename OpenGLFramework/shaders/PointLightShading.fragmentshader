@@ -49,11 +49,10 @@ void main(){
 	float cosAlpha = clamp( dot( E,R ), 0,1 );
 	
 	gl_FragColor.rgb = 
-		// Ambient : simulates indirect lighting
-		MaterialAmbientColor +
-		// Diffuse : "color" of the object
-		MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance*distance) +
-		// Specular : reflective highlight, like a mirror
-		MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,500) / (distance*distance);
-
+	// Ambient : simulates indirect lighting
+	MaterialAmbientColor +
+	// Diffuse : "color" of the object
+	MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance*distance) +
+	// Specular : reflective highlight, like a mirror
+	MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,50) / (distance*distance);
 }

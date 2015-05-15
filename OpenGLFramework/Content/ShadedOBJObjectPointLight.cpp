@@ -4,7 +4,10 @@
 
 bool ShadedOBJObjectPointLight::loadResourcesToMainMemory(){
 	//Read our .obj file into our raw data buffers
-	bool res = loadOBJ(model.c_str(), vertices, uvs, normals);
+	std::vector<unsigned short> indices;
+	std::vector<glm::vec3> tangs;
+	std::vector<glm::vec3> bitangs;
+	bool res = loadAssImp(model.c_str(), indices, vertices, uvs, normals, tangs, bitangs);
 	return true;
 }
 
@@ -24,7 +27,7 @@ bool ShadedOBJObjectPointLight::allocateOpenGLResources(){
 		return false;
 
 	// Create and compile our GLSL program from the shaders
-	programID = LoadShaders( "OpenGLFramework/shaders/PointLightShading.vertexshader", "OpenGLFramework/shaders/PointLightShading.fragmentshader" );
+	programID = LoadShaders( "OpenGLFramework/shaders/PointLightShading.vertexshader", "OpenGLFramework/shaders/ToonPointLight.fragmentshader" );
 	// Get a handle for our "MVP" uniform
 	MatrixID = glGetUniformLocation(programID, "MVP");			//MVP matrix (uniform)
 	ViewMatrixID = glGetUniformLocation(programID, "V");		//View matrix(uniform)

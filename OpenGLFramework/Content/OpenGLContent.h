@@ -20,6 +20,7 @@ public:
 	virtual bool allocateOpenGLResources()=0;
 	virtual bool render(glm::mat4 P, glm::mat4 V)=0;
 	virtual bool unallocateAllResources()=0;
+	// virtual void setShader(std::string name);
 	inline OpenGLContent& setModelMatrix(glm::mat4 M){
 		this->M=M;
 		return *this;

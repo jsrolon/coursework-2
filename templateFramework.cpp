@@ -80,7 +80,7 @@ void createWorldScene(){
 	// GLfloat aSillyTriangle[]={ -0.5,0,-1,   0.5,0,-1,  0,0.5f,-1};
 	// objectB=new ManualObject_SingleColour(3, aSillyTriangle);
 	//2.3. We can also load an obj file
-	objectC=new AnisotropicObjectPointLight("media/Suzanne.obj","media/Suzanne.DDS");
+	objectC=new ShadedOBJObjectPointLight("media/Suzanne.obj","media/Suzanne.DDS");
 
 	//2.2. load resources from disc into main memory
 	// objectA->loadResourcesToMainMemory();
@@ -99,13 +99,17 @@ void createWorldScene(){
 }
 
 void renderWorldScene(RenderBufferObject* rtt_fbo, glm::mat4 P,glm::mat4 V){
-		//1. Prepare the buffer for rendering:
-		rtt_fbo->preRender();
-		//2. Render all our contents
-		// objectA->render(P,V);
-		// objectB->render(P,V);
-		objectC->render(P,V);
-		rtt_fbo->postRender();
+	/* First pass: render depth data to shadow map */
+	//1. Prepare the buffer for rendering:
+	rtt_fbo->preRender();
+	//2. Render all our contents
+	objectC->render(P,V);
+	rtt_fbo->postRender();
+
+	/* Second pass: actually render things */
+	def_fbo->preRender();
+	objectC->render(P,V);
+	def_fbo->postRender();
 }
 
 void destroyWorldScene(){

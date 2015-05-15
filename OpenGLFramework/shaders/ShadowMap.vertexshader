@@ -1,15 +1,15 @@
 #version 120
 
-attribute vec3 Position;
-attribute vec2 TexCoord;
-attribute vec3 Normal;
+attribute vec3 vertexPosition_modelspace;
+attribute vec2 vertexUV;
+// attribute vec3 vertexNormal_modelspace;
 
 uniform mat4 MVP;
 
-varying vec2 TexCoordOut;
+varying vec2 vertexUVOut;
 
 void main()
 {
-    gl_Position = MVP * vec4(Position, 1.0);
-    TexCoordOut = TexCoord;
+    gl_Position = MVP * vec4(vertexPosition_modelspace, 1.0);
+    vertexUVOut = vertexUV;
 }
